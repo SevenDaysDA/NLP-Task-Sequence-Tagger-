@@ -41,16 +41,36 @@ class BiLSTM():
         batch_size = self.params["batch_size"]
         model_path = self.params["model_path"]
 
+        print("Load Data ")
         # Load data:
-        X_TEST , Y_TEST = load_data("test.conll")
-        X_DEV , Y_DEV = load_data("dev.conll")
-        X_TRAIN , Y_TRAIN = load_data("train.conll")
+        X_TEST_raw , Y_TEST_raw = load_data("test.conll")
+        X_DEV_raw , Y_DEV_raw = load_data("dev.conll")
+        X_TRAIN_raw , Y_TRAIN_raw = load_data("train.conll")
+        print("--------------------------------------------")
+
+        print("Load Embedding")
+        # Load Embedding
+        embedding_dict = {}
+        with open("glove.6B.50d.txt", 'r', encoding="utf-8") as f:
+            for line in f:
+                key = line.split()[0]
+                value = np.array(list(map(float,line.split()[1:51])))
+                embedding_dict[key] = value
+        print("--------------------------------------------")
+
+        #[[char_to_index[char] for char in word] for word in X_train_data]
+
+        X_TEST_embed = [[embedding_dict[key] for key in word] for word in X_TEST_raw]
+        print(len(X_TEST_raw))
+        print(len(X_TEST_embed))
+        
 
 
-        print(len(X_TRAIN))
-        print(len(Y_TRAIN))
-        print(len(X_DEV))
-        print(len(Y_DEV))
+        
+        
+
+
+
 
 
 
