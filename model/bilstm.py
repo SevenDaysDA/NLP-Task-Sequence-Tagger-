@@ -1,10 +1,11 @@
+from importlib.resources import path
 import os
 from unittest import result
 import numpy as np
 np.random.seed(42)
 import math
 
-from .reader import load_data
+from reader import load_data
 
 
 
@@ -30,7 +31,31 @@ class BiLSTM():
 
     def __init__(self, params):
         self.params = params
+        X_TEST_raw , Y_TEST_raw = [],[]
+        X_DEV_raw , Y_DEV_raw = [],[]
+        X_TRAIN_raw , Y_TRAIN_raw = [], []
 
+
+    def load_data(self, pathname):
+        print("Load Data ")
+        # Load data:
+        print(os.getcwd())
+        print("none")
+        X_TEST_raw , Y_TEST_raw = load_data(filename="test.conll",data_path=pathname+"data")
+        X_DEV_raw , Y_DEV_raw = load_data("dev.conll")
+        X_TRAIN_raw , Y_TRAIN_raw = load_data("train.conll")
+        print("--------------------------------------------")
+        print("change")
+        print("Load Embedding")
+        # Load Embedding
+        embedding_dict = {}
+
+        with open(".glove.6B.50d.txt", 'r', encoding="utf-8") as f:
+            for line in f:
+                key = line.split()[0]
+                value = np.array(list(map(float,line.split()[1:51])))
+                embedding_dict[key] = value
+        print("--------------------------------------------")
 
 
         
@@ -41,36 +66,13 @@ class BiLSTM():
         batch_size = self.params["batch_size"]
         model_path = self.params["model_path"]
 
-        print("Load Data ")
-        # Load data:
-        X_TEST_raw , Y_TEST_raw = load_data("test.conll")
-        X_DEV_raw , Y_DEV_raw = load_data("dev.conll")
-        X_TRAIN_raw , Y_TRAIN_raw = load_data("train.conll")
-        print("--------------------------------------------")
 
-        print("Load Embedding")
-        # Load Embedding
-        embedding_dict = {}
-        with open("glove.6B.50d.txt", 'r', encoding="utf-8") as f:
-            for line in f:
-                key = line.split()[0]
-                value = np.array(list(map(float,line.split()[1:51])))
-                embedding_dict[key] = value
-        print("--------------------------------------------")
-
+        
         #[[char_to_index[char] for char in word] for word in X_train_data]
 
         X_TEST_embed = [[embedding_dict[key] for key in word] for word in X_TEST_raw]
         print(len(X_TEST_raw))
         print(len(X_TEST_embed))
-        
-
-
-        
-        
-
-
-
 
 
 

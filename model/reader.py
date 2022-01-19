@@ -3,17 +3,7 @@ import numpy as np
 
 import os
 
-def load_data(filename, data_path="data"):
-
-    print("Load Embedding")
-    # Load Embedding
-    embedding_dict = {}
-    with open("glove.6B.50d.txt", 'r', encoding="utf-8") as f:
-        for line in f:
-            key = line.split()[0]
-            value = np.array(list(map(float,line.split()[1:51])))
-            embedding_dict[key] = value
-    print("--------------------------------------------")
+def load_data(filename, data_path=".data"):
 
     with open(os.path.join(data_path,filename), 'r') as lines:
             input, label = [] , []
